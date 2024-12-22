@@ -31,3 +31,20 @@ app.get('*', (req, res) => {
   res.send('ok');
 });
 
+
+// Route for /hello/:id
+app.get('/hello/:id?', (req, res) => {
+    const { id } = req.params;
+    const message = id ? `Hello, ${id}` : "Hello";
+    res.json({ status: 200, message });
+  });
+  
+  // Route for /search
+  app.get('/search', (req, res) => {
+    const { s } = req.query;
+    if (s) {
+      res.json({ status: 200, message: "ok", data: s });
+    } else {
+      res.status(500).json({ status: 500, error: true, message: "you have to provide a search" });
+    }
+  });
