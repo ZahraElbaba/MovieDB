@@ -49,9 +49,29 @@ app.get('/hello/:id?', (req, res) => {
     }
   });
 
+
   const movies = [
     { title: 'Jaws', year: 1975, rating: 8 },
     { title: 'Avatar', year: 2009, rating: 7.8 },
     { title: 'Brazil', year: 1985, rating: 8 },
     { title: 'الإرهاب والكباب', year: 1992, rating: 6.2 }
 ]
+
+
+// Route to get movies ordered by date
+app.get('/movies/read/by-date', (req, res) => {
+    const sortedByDate = [...movies].sort((a, b) => a.year - b.year);
+    res.json({ status: 200, data: sortedByDate });
+  });
+  
+  // Route to get movies ordered by rating
+  app.get('/movies/read/by-rating', (req, res) => {
+    const sortedByRating = [...movies].sort((a, b) => b.rating - a.rating);
+    res.json({ status: 200, data: sortedByRating });
+  });
+  
+  // Route to get movies ordered by title
+  app.get('/movies/read/by-title', (req, res) => {
+    const sortedByTitle = [...movies].sort((a, b) => a.title.localeCompare(b.title));
+    res.json({ status: 200, data: sortedByTitle });
+  });
