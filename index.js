@@ -75,3 +75,17 @@ app.get('/movies/read/by-date', (req, res) => {
     const sortedByTitle = [...movies].sort((a, b) => a.title.localeCompare(b.title));
     res.json({ status: 200, data: sortedByTitle });
   });
+
+
+  // Route to get a movie by ID
+app.get('/movies/read/id/:id', (req, res) => {
+    const id = parseInt(req.params.id, 10); // Parse ID from the URL
+    const movie = movies.find(movie => movie.id === id); // Find the movie by ID
+  
+    if (movie) {
+      res.json({ status: 200, data: movie });
+    } else {
+      res.status(404).json({ status: 404, error: true, message: `The movie ${id} does not exist` });
+    }
+  });
+  
