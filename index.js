@@ -31,8 +31,3 @@ app.get('*', (req, res) => {
   res.send('ok');
 });
 
-// Start the server
-const PORT1 = 3000;
-app.listen(PORT1, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
