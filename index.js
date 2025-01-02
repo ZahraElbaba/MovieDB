@@ -200,3 +200,31 @@ app.get('/movies/delete/:id', (req, res) => {
         });
     }
 });
+
+
+
+// Route to update a movie by ID
+app.get('/movies/update/:id', (req, res) => {
+    const id = parseInt(req.params.id, 10);
+    const { title, year, rating } = req.query;
+
+    // Find the movie with the given ID
+    const movie = movies.find(movie => movie.id === id);
+
+    if (movie) {
+        // Update only the fields provided in the query
+        if (title) movie.title = title;
+        if (year && !isNaN(year) && year.length === 4) movie.year = parseInt(year, 10);
+        if (rating && !isNaN(rating)) movie.rating = parseFloat(rating);
+
+        // Respond with the updated list of movies
+        res.status(200).json({ status: 200, data: movies });
+    } else {
+        // Movie ID not found
+        res.status(404).json({
+            status: 404,
+            error: true,
+            message: `The movie ${id} does not exist`,
+        });
+    }
+});
