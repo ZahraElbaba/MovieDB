@@ -144,3 +144,36 @@ app.get('/movies/read/id/:id', (req, res) => {
         });
     }
 });
+
+
+// Route to add a new movie
+app.get('/movies/add', (req, res) => {
+    const { title, year, rating } = req.query;
+
+    // Validation for missing or invalid title and year
+    if (!title || !year || isNaN(year) || year.length !== 4) {
+        return res.status(403).json({
+            status: 403,
+            error: true,
+            message: 'You cannot create a movie without providing a title and a year',
+        });
+    }
+
+    // Default rating to 4 if missing
+    const movieRating = rating ? parseFloat(rating) : 4;
+
+    // Create new movie
+    const newMovie = {
+        id: movies.length + 1,
+        title,
+        year: parseInt(year, 10),
+        rating: movieRating,
+    };
+
+    // Add new movie to the movies array
+    movies.push(newMovie);
+
+    // Respond with the updated list of movies
+    res.status(200).json({ status: 200, data: movies });
+});
+
