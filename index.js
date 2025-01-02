@@ -89,3 +89,58 @@ app.get('/movies/read/id/:id', (req, res) => {
     }
   });
   
+
+  // Route to add a new movie
+app.get('/movies/add', (req, res) => {
+    const { title, year, rating } = req.query;
+  
+    // Validation for title and year
+    if (!title || !year || isNaN(year) || year.length !== 4) {
+      return res
+        .status(403)
+        .json({ status: 403, error: true, message: 'You cannot create a movie without providing a title and a valid year' });
+    }
+  
+    // Set default rating if not provided
+    const newRating = rating ? parseFloat(rating) : 4;
+  
+    // Create the new movie
+    const newMovie = {
+      id: movies.length + 1, // Generate a unique ID
+      title,
+      year: parseInt(year, 10),
+      rating: newRating,
+    };
+  
+    // Add the new movie to the array
+    movies.push(newMovie);
+  
+    // Respond with the updated movies list
+    res.json({ status: 200, data: movies });
+  });
+  
+  const express = require('express');
+const app1 = express();
+
+// Mock data for movies
+const movies1 = [
+    { id: 1, title: 'The Shawshank Redemption', year: 1994 },
+    { id: 2, title: 'The Godfather', year: 1972 },
+    { id: 3, title: 'The Dark Knight', year: 2008 },
+];
+
+// Route to handle movie requests by ID
+app.get('/movies/read/id/:id', (req, res) => {
+    const id = parseInt(req.params.id, 10);
+    const movie = movies.find(m => m.id === id);
+
+    if (movie) {
+        res.status(200).json({ status: 200, data: movie });
+    } else {
+        res.status(404).json({
+            status: 404,
+            error: true,
+            message: `The movie ${id} does not exist`,
+        });
+    }
+});
