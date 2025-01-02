@@ -228,3 +228,86 @@ app.get('/movies/update/:id', (req, res) => {
         });
     }
 });
+
+
+// GET /movies - Retrieve all movies
+app.get('/movies', (req, res) => {
+    res.status(200).json({ status: 200, data: movies });
+});
+
+// POST /movies - Add a new movie
+app.post('/movies', (req, res) => {
+    const { title, year, rating } = req.body;
+
+    if (!title || !year || isNaN(year) || year.toString().length !== 4) {
+        return res.status(403).json({
+            status: 403,
+            error: true,
+            message: 'You cannot create a movie without providing a title and a valid year',
+        });
+    }
+
+    const newMovie = {
+        id: movies.length + 1,
+        title,
+        year: parseInt(year, 10),
+        rating: rating ? parseFloat(rating) : 4,
+    };
+
+    movies.push(newMovie);
+    res.status(201).json({ status: 201, data: movies });
+});
+
+// GET /movies/:id - Retrieve a movie by ID
+app.get('/movies/:id', (req, res) => {
+    const id = parseInt(req.params.id, 10);
+    const movie = movies.find(m => m.id === id);
+
+    if (movie) {
+        res.status(200).json({ status: 200, data: movie });
+    } else {
+        res.status(404).json({
+            status: 404,
+            error: true,
+            message: `The movie ${id} does not exist`,
+        });
+    }
+});
+
+// PUT /movies/:id - Update a movie by ID
+app.put('/movies/:id', (req, res) => {
+    const id = parseInt(req.params.id, 10);
+    const { title, year, rating } = req.body;
+    const movie = movies.find(m => m.id === id);
+
+    if (movie) {
+        if (title) movie.title = title;
+        if (year && !isNaN(year) && year.toString().length === 4) movie.year = parseInt(year, 10);
+        if (rating && !isNaN(rating)) movie.rating = parseFloat(rating);
+
+        res.status(200).json({ status: 200, data: movies });
+    } else {
+        res.status(404).json({
+            status: 404,
+            error: true,
+            message: `The movie ${id} does not exist`,
+        });
+    }
+});
+
+// DELETE /movies/:id - Delete a movie by ID
+app.delete('/movies/:id', (req, res) => {
+    const id = parseInt(req.params.id, 10);
+    const movieIndex = movies.findIndex(m => m.id === id);
+
+    if (movieIndex !== -1) {
+        movies.splice(movieIndex, 1);
+        res.status(200).json({ status: 200, data: movies });
+    } else {
+        res.status(404).json({
+            status: 404,
+            error: true,
+            message: `The movie ${id} does not exist`,
+        });
+    }
+});
